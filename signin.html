@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Document</title>
+
+    <script>
+        if (sessionStorage.getItem("username")) {
+            window.location.href = 'index.html'
+        }
+    </script>
+</head>
+
+<body>
+    <div id="nav"></div>
+    <!-- Sign In Code -->
+    <div class="flex justify-center items-center h-screen bg-blue-100">
+        <div class="w-96 p-6 shadow-lg bg-white rounded-lg text-black">
+            <h1 class="text-3xl  text-center font-semibold">Sign In</h1>
+            <hr class="mt-3" />
+            <div class="mt-3">
+                <label class="block text-base mb-2">Username</label>
+                <input type="text" id="username" name="username"
+                    class="border focus:border-gray-500 w-full text-base px-2 py-1" placeholder="Enter Email..."
+                    autoComplete="off" required />
+            </div>
+            <div class="mt-4">
+                <label class="block text-base mb-2">Password</label>
+                <input type="password" id="password" name="password"
+                    class="border focus:border-gray-500 w-full text-base px-2 py-1" placeholder="Enter Password..."
+                    autoComplete="off" required />
+            </div>
+            <div class="mt-5 gap-[2%] flex">
+                <button onclick="signin()" type="submit"
+                    class="border-2 border-blue-500 bg-blue-500 rounded-md text-white hover:bg-transparent hover:text-blue-700 py-1 w-[48%] ">Sign
+                    In</button>
+                <button
+                    class="border-2 border-red-500 bg-red-500 rounded-md text-white hover:bg-transparent hover:text-red-700 py-1 w-[48%] ">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $("#nav").load("navbar.html");
+        });
+
+        function signin() {
+            var username = document.getElementById("username").value;
+            var password = parseInt(document.getElementById("password").value);
+
+            // if (username == '') {
+            //     alert("Please Enter UserName ");
+            // }
+            // else if (password == '') {
+            //     console.log(1);
+            //     alert("Please Enter Password ");
+            // }
+            // else {
+                console.log(2);
+                fetch("http://localhost:3000/user")
+                    .then(response => response.json())
+                    .then(data => {
+
+
+                        if (data[0].username == username && data[0].password == password) {
+
+                            sessionStorage.setItem("username", username);
+                            sessionStorage.setItem("square_ft", 25);
+                            window.location.href = "/index.html"
+                        } else {
+                            // document.getElementById("message").innerHTML = "Invalid username or password.";
+                            alert("Invalid username or password.")
+
+                        }
+
+                    })
+                    .catch(error => {
+                        console.error("Error loading user data:", error);
+                        alert("Error loading user data");
+                    });
+            // }
+        }
+    </script>
+</body>
+
+</html>

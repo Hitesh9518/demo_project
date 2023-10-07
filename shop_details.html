@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <title>Document</title>
+
+    <script>
+        if (!sessionStorage.getItem("username")) {
+            window.location.href = "signin.html"
+        }
+
+        //get shop no
+        let receivedval = localStorage.getItem("passVal");
+        // console.log(receivedval);
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            if (receivedval) {
+                document.getElementById('shop_no').value = receivedval;
+
+                let temp;
+
+                // get shop details
+                fetch("http://localhost:3000/shop_data?Shop_no=" + receivedval)
+                    .then((res) => res.json())
+                    .then((output) => {
+                        output.map((val) => {
+                            temp = val.Shop_no;
+                            document.getElementById("id").value = val.id;
+                            document.getElementById("owner").value = val.Owner;
+                            document.getElementById("owner_mobile_no").value = val.Owner_mobile_no;
+                            document.getElementById("rental").value = val.Rental;
+                            document.getElementById("rental_mobile_no").value = val.Rental_mobile_no;
+                            document.getElementById("email").value = val.Email;
+                        })
+
+                        if (temp == receivedval) {
+                            document.getElementById("addBtn").style.display = "none";
+                            document.getElementById("updateBtn").style.display = "block";
+                            document.getElementById("show_data").disabled = false;
+                        }
+                    })
+
+            } else {
+                document.getElementById("shop_no").value = "";
+            }
+        });
+
+    </script>
+</head>
+
+<body class="">
+    <div id="nav"></div>
+    <div class="flex justify-center items-center h-full bg-blue-100">
+
+        <div class="w-[550px] mt-24 mb-9 p-6 shadow-2xl bg-white rounded-lg text-black">
+            <h1 class="text-3xl  text-center font-semibold">Shop Details</h1>
+            <hr class="mt-3" />
+
+            <div class="mt-6 flex justify-between ">
+                <input type="hidden" id="id">
+                <label class=" text-base mb-2">Shop No :</label>
+                <input type="text" id="shop_no" name="shop_no" class="border focus:border-gray-500 w-80 text-base "
+                    placeholder="Shop No..." autoComplete="off" />
+            </div>
+
+            <div class="mt-3 flex justify-between ">
+                <label class=" text-base mb-2">Owner :</label>
+                <input type="text" id="owner" name="owner" class="border focus:border-gray-500 w-80 text-base "
+                    placeholder="Owner Name..." autoComplete="off" />
+            </div>
+
+            <div class="mt-3 flex justify-between ">
+                <label class=" text-base mb-2">Owner Mobile No :</label>
+                <input type="text" id="owner_mobile_no" name="owner_mobile_no"
+                    class="border focus:border-gray-500 w-80 text-base " placeholder="Owner Mobile No..."
+                    autoComplete="off" />
+            </div>
+
+            <div class="mt-3 flex justify-between ">
+                <label class=" text-base mb-2">Rental :</label>
+                <input type="text" id="rental" name="rental" class="border focus:border-gray-500 w-80 text-base "
+                    placeholder="Rental Name..." autoComplete="off" />
+            </div>
+
+            <div class="mt-3 flex justify-between ">
+                <label class=" text-base mb-2">Rentel Mobile No :</label>
+                <input type="text" id="rental_mobile_no" name="rental_mobile_no"
+                    class="border focus:border-gray-500 w-80 text-base " placeholder="Rental Mobile No..."
+                    autoComplete="off" />
+            </div>
+
+            <div class="mt-3 flex justify-between ">
+                <label class=" text-base mb-2">Email :</label>
+                <input type="text" id="email" name="email" class="border focus:border-gray-500 w-80 text-base "
+                    placeholder="Email..." autoComplete="off" />
+            </div>
+
+            <div class="mt-3 flex justify-between ">
+                <label class=" text-base mb-2">Square ft :</label>
+                <input type="number" id="square_ft" name="square_ft" min="1"
+                    class="border focus:border-gray-500 w-80 text-base " placeholder="Square ft..."
+                    autoComplete="off" />
+            </div>
+
+            <div class="mt-3 flex justify-between ">
+                <label class=" text-base mb-2">Amount :</label>
+                <input type="number" id="amount" name="amount" min="1" class="border focus:border-gray-500 w-80 text-base "
+                    placeholder="Amount..." autoComplete="off" />
+            </div>
+            <!-- <div class="mt-3 flex justify-between ">
+                <label class=" text-base mb-2">Square ft :</label>
+                <input type="number" id="square_ft1" name="square_ft" min="1"
+                    class="border focus:border-gray-500 w-80 text-base " placeholder="Square ft..."
+                    autoComplete="off" />
+            </div>
+
+            <div class="mt-3 flex justify-between ">
+                <label class=" text-base mb-2">Amount :</label>
+                <input type="number" id="amount1" name="amount" min="1" class="border focus:border-gray-500 w-80 text-base "
+                    placeholder="Amount..." autoComplete="off" />
+            </div> -->
+            <div class="mt-3 ">
+                <button type="button" id="add_inp_field"
+                    class="border-2 border-green-500 bg-green-500 rounded-md text-white hover:bg-transparent hover:text-green-700 py-1 w-[30%] ">Add
+                    Shop No</button>
+            </div>
+
+            <div id="add_inp" class="hidden field_wrapper mt-2">
+                <div class="flex gap-2 justify-center items-center text-center">
+
+                    <input type="number" name="square_ft[]" id="square_ft[]" value="" placeholder="Square ft..."
+                        class="border focus:border-gray-500 w-50 text-base" autocomplete="off"/>
+
+                    <input type="number" id="amount[]" name="amount[]" class="border focus:border-gray-500 w-50 text-base "
+                        placeholder="Amount..." autoComplete="off" />
+
+                    <a href="javascript:void(0);" class="add_button border-2 border-green-500 bg-green-500 rounded-md text-white hover:bg-transparent hover:text-green-700 w-14" title="Add field"><button>Add</button></a>
+                </div>
+            </div>
+            <!-- <div class="mt-3 flex justify-between ">
+                <label class=" text-base mb-2">Due Payment :</label>
+                <input type="text" id="due_payment" name="due_payment"
+                    class="border focus:border-gray-500 w-80 text-base " placeholder="Due Payment..."
+                    autoComplete="off" />
+            </div>
+
+            <div class="mt-3 flex justify-between">
+                <label class="text-base mb-2">Last Payment :</label>
+                <input type="text" id="last_payment" name="last_payment"
+                    class=" border focus:border-gray-500 text-base w-36" placeholder="Amount..." autoComplete="off" />
+                <input type='date' name='date' id='date' />
+            </div> -->
+
+            <div class="mt-8 flex gap-[2%]">
+                <button onclick="show_details()" type="button" id="show_data" disabled
+                    class="border-2 border-blue-500 bg-blue-500 rounded-md text-white hover:bg-transparent hover:text-blue-700 py-1 w-[48%] disabled:opacity-50 ">Show
+                    Details</button>
+                <button onclick="add_data()" type="button" id="addBtn"
+                    class="border-2 border-green-500 bg-green-500 rounded-md text-white hover:bg-transparent hover:text-green-700 py-1 w-[48%] ">Add</button>
+                <button onclick="update_data()" type="button" id="updateBtn"
+                    class="hidden border-2 border-green-500 bg-green-500 rounded-md text-white hover:bg-transparent hover:text-green-700 py-1 w-[48%] ">Update</button>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        //add-remove-input-fields-dynamically
+
+        const add_inp_field = document.getElementById("add_inp_field");
+        const add_inp = document.getElementById("add_inp");
+
+        add_inp_field.addEventListener("click", function () {
+            add_inp.style.display = "block";
+            console.log(1);
+        })
+
+        $(document).ready(function () {
+            var maxField = 10; //Input fields increment limitation
+            var addButton = $('.add_button'); //Add button selector
+            var wrapper = $('.field_wrapper'); //Input field wrapper
+            var fieldHTML = '<div class="mt-2 flex gap-2 justify-center items-center text-center"><input type="number" name="square_ft[]" id="square_ft[]" value="" placeholder="Square ft..." class="border focus:border-gray-500 w-50 text-base" autocomplete="off"/><input type="number" id="amount[]" name="amount[]" class="border focus:border-gray-500 w-50 text-base" placeholder="Amount..." autoComplete="off" /><a href="javascript:void(0);" class="remove_button"><button class="add_button border-2 border-red-500 bg-red-500 rounded-md text-white hover:bg-transparent hover:text-red-700 w-16">Remove</button></a></div>'; //New input field html 
+            var x = 1; //Initial field counter is 1
+
+            // Once add button is clicked
+            $(addButton).click(function () {
+                //Check maximum number of input fields
+                if (x < maxField) {
+                    x++; //Increase field counter
+                    $(wrapper).append(fieldHTML); //Add field html
+                } else {
+                    alert('A maximum of ' + maxField + ' fields are allowed to be added. ');
+                }
+            });
+
+            // Once remove button is clicked
+            $(wrapper).on('click', '.remove_button', function (e) {
+                e.preventDefault();
+                $(this).parent('div').remove(); //Remove field html
+                x--; //Decrease field counter
+            });
+        });
+
+        //---------------------------------------------------------------------------
+
+        //load navbar
+
+        $(function () {
+            $("#nav").load("navbar.html");
+        });
+
+        //------------------------
+
+        //add data
+
+        function add_data() {
+
+            var shop_no = parseInt(document.getElementById("shop_no").value);
+            var owner = document.getElementById("owner").value;
+            var owner_mobile_no = parseInt(document.getElementById("owner_mobile_no").value);
+            var rental = document.getElementById("rental").value;
+            var rental_mobile_no = parseInt(document.getElementById("rental_mobile_no").value);
+            var email = document.getElementById("email").value;
+
+            var data = {
+                Shop_no: receivedval, Owner: owner, Owner_mobile_no: owner_mobile_no, Rental: rental, Rental_mobile_no: rental_mobile_no, Email: email
+            };
+
+            fetch("http://localhost:3000/shop_data", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+                .then((res) => res.json())
+            alert("Registration Successful..!")
+        }
+
+        //----------------------------------------------------------
+
+        //update data
+
+        function update_data() {
+            var id = parseInt(document.getElementById("id").value);
+            var shop_no = parseInt(document.getElementById("shop_no").value);
+            var owner = document.getElementById("owner").value;
+            var owner_mobile_no = parseInt(document.getElementById("owner_mobile_no").value);
+            var rental = document.getElementById("rental").value;
+            var rental_mobile_no = parseInt(document.getElementById("rental_mobile_no").value);
+            var email = document.getElementById("email").value;
+
+            var data = {
+                id: id, Shop_no: receivedval, Owner: owner, Owner_mobile_no: owner_mobile_no, Rental: rental, Rental_mobile_no: rental_mobile_no, Email: email
+            };
+
+            fetch("http://localhost:3000/shop_data/" + id, {
+                method: "put",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+                .then((res) => res.json())
+            alert("Update Successful..!")
+        }
+
+        //----------------------------------------------------
+
+        //go show details page
+
+        function show_details() {
+            window.location.href = "show_details.html"
+        }
+
+        //-----------------------------------------------------
+
+        //square ft wise amount convert
+        
+        const square_ft = document.getElementById("square_ft");
+        const amount = document.getElementById("amount");
+        
+        square_ft.addEventListener("input", function () {
+            const st = sessionStorage.getItem("square_ft")
+            // console.log(sessionStorage.getItem("square_ft"));
+
+            amount.value = square_ft.value * st
+        });
+        
+        //----------------------------------------------------
+        
+        //square ft wise amount convert new input fields
+
+        const square_ft_new = document.getElementById("square_ft[]");
+        const amount_new = document.getElementById("amount[]");
+
+        square_ft_new.addEventListener("input", function () {
+            const st = sessionStorage.getItem("square_ft")
+            // console.log(sessionStorage.getItem("square_ft"));
+
+            amount_new.value = square_ft_new.value * st
+        });
+
+        const square_ft_new1 = document.getElementById("square_ft1");
+        const amount_new1 = document.getElementById("amount1");
+
+        square_ft_new1.addEventListener("input", function () {
+            const st = sessionStorage.getItem("square_ft")
+            // console.log(sessionStorage.getItem("square_ft"));
+
+            amount_new1.value = square_ft_new1.value * st
+        });
+
+        //-----------------------------------------------------
+    </script>
+</body>
+
+</html>
